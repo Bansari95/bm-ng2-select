@@ -107,7 +107,7 @@ let styles = `
 `;
 
 @Component({
-  selector: 'ng-select',
+  selector: 'bm-ng-select',
   styles: [styles],
   providers: [
     {

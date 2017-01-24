@@ -15,10 +15,6 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "lib": ["dom", "es6"],
-    "types": [
-      "jasmine",
-      "webpack"
-    ],
     "typeRoots": [
       "../node_modules/@types"
     ]

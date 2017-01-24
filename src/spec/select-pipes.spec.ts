@@ -27,7 +27,7 @@ describe('Component: ng2-select', () => {
 
 @Component({
   selector: 'select-test',
-  template: '<ng-select></ng-select>'
+  template: '<bm-ng-select></bm-ng-select>'
 })
 
 class TestSelectComponent {
