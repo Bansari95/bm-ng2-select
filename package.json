@@ -1,8 +1,8 @@
 {
   "name": "bm-ng2-select",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "ng2-select Botmetric implementation Multi select",
-  "main": "index.js",
+  "main": "bm-ng2-select.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublish": "tsc"
