@@ -158,7 +158,7 @@ let styles = `
                (mouseenter)="selectActive(o)"
                (click)="selectMatch(o, $event)">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+              <div style='pointer-events: none' [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
             </a>
           </div>
         </li>
@@ -177,7 +177,7 @@ let styles = `
                (click)="selectMatch(o, $event)"
                [ngClass]="{'active': isActive(o)}">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+              <div style='pointer-events: none' [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
             </a>
           </div>
         </li>
@@ -225,7 +225,7 @@ let styles = `
                (mouseenter)="selectActive(o)"
                (click)="selectMatch(o, $event)">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+              <div style='pointer-events: none' [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
             </a>
           </div>
         </li>
@@ -244,7 +244,7 @@ let styles = `
                (click)="selectMatch(o, $event)"
                [ngClass]="{'active': isActive(o)}">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+              <div style='pointer-events: none' [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
             </a>
           </div>
         </li>
@@ -309,6 +309,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   @Output() public removed:EventEmitter<any> = new EventEmitter();
   @Output() public typed:EventEmitter<any> = new EventEmitter();
   @Output() public opened:EventEmitter<any> = new EventEmitter();
+  @Output() public dropOpened:EventEmitter<any> = new EventEmitter();
 
   public options:Array<SelectItem> = [];
   public itemObjects:Array<SelectItem> = [];
@@ -326,6 +327,11 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
   private get optionsOpened(): boolean{
     return this._optionsOpened;
+  }
+
+  public closeDropdown(){
+    this.inputMode = false;
+    this.optionsOpened = false;
   }
 
   protected onChange:any = Function.prototype;
@@ -560,6 +566,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       this.behavior.first();
     }
     this.optionsOpened = true;
+    this.dropOpened.emit(true);
   }
 
   private hideOptions():void {
