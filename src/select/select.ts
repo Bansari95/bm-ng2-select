@@ -428,6 +428,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
         let inputItem : SelectItem = new SelectItem({id: this.inputValue.trim(), text: this.inputValue.trim(), children: null});
         this.itemObjects.push(inputItem);
         this.active.push(inputItem);
+        e.target.value = "";
         this.data.next(this.active);
       }
       e.preventDefault();

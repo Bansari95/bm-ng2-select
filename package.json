@@ -1,6 +1,6 @@
 {
   "name": "bm-ng2-select",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "ng2-select Botmetric implementation Multi select",
   "main": "bm-ng2-select.js",
   "scripts": {
