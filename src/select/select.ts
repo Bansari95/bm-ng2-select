@@ -390,7 +390,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
     let target = e.target || e.srcElement;
     if (isUpMode && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 ||
-      e.keyCode === 40 || e.keyCode === 13)) {
+      e.keyCode === 40 || e.keyCode === 13 || e.keyCode === 186 || e.keyCode === 188)) {
       e.preventDefault();
       if(!this.isInputAllowed)
         return;
@@ -447,8 +447,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       e.preventDefault();
       return;
     }
-    // enter
-    if (!isUpMode && e.keyCode === 13) {
+    // enter or semicolon or comma
+    if (!isUpMode && (e.keyCode === 13 || e.keyCode === 186 || e.keyCode === 188)) {
       if (this.active.indexOf(this.activeOption) === -1) {
         this.selectActiveMatch();
         this.behavior.next();
