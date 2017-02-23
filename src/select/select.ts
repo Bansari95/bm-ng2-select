@@ -145,6 +145,7 @@ let styles = `
     <input type="text" autocomplete="false" tabindex="-1"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
+           (blur)="generateBox($event)"
            [disabled]="disabled"
            class="form-control ui-select-search"
            *ngIf="inputMode"
@@ -207,6 +208,7 @@ let styles = `
     <input type="text"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
+           (blur)="generateBox($event)"
            (click)="matchClick($event)"
            [disabled]="disabled"
            autocomplete="false"
@@ -354,6 +356,33 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
+  /**
+   * @author Himanshu
+   * This function is used to push input element into box.
+   * @param event
+   */
+  public generateBox(e:any){
+    if(this.isInputAllowed) {
+      if (this.inputValue.length > 0) {
+        if (this.isInputAllowed && this.inputValue.trim() != "") {
+          let inputItem: SelectItem = new SelectItem({
+            id: this.inputValue.trim(),
+            text: this.inputValue.trim(),
+            children: null
+          });
+          this.itemObjects.push(inputItem);
+          this.active.push(inputItem);
+          this.inputValue = '';
+          e.target.value = "";
+          this.data.next(this.active);
+        }
+        e.preventDefault();
+        return;
+      }
+    }else {
+      return ;
+    }
+  }
   public inputEvent(e:any, isUpMode:boolean = false):void {
     // tab
     if (e.keyCode === 9) {
