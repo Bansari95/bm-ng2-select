@@ -75,7 +75,7 @@ let styles = `
   
   .ui-select-multiple {
     height: auto;
-    padding:3px 3px 0 3px;
+    padding:3px 3px 0 12px;
   }
   
   .ui-select-multiple input.ui-select-search {
