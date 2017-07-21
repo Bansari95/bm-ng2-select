@@ -389,15 +389,18 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       return;
     }
     let target = e.target || e.srcElement;
-    if (isUpMode && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 ||
-      e.keyCode === 40 || e.keyCode === 13 || e.keyCode === 186 || e.keyCode === 188)) {
-      e.preventDefault();
-      if(!this.isInputAllowed)
-        return;
-      else{
-       console.log(e.target.value);
+      //Arrow keys
+      if (isUpMode && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 ||
+          e.keyCode === 40 )) {
+          e.preventDefault();
+          return;
       }
-    }
+
+      if(isUpMode && e.keyCode === 13 || e.keyCode === 186 || e.keyCode === 188){
+          e.preventDefault();
+          if (!this.isInputAllowed)
+              return;
+      }
     // backspace
     if (!isUpMode && e.keyCode === 8) {
       let el:any = this.element.nativeElement
@@ -449,20 +452,27 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
     // enter or semicolon or comma
     if (!isUpMode && (e.keyCode === 13 || e.keyCode === 186 || e.keyCode === 188)) {
-      if (this.active.indexOf(this.activeOption) === -1) {
-        this.selectActiveMatch();
-        this.behavior.next();
-      }
-      if(this.isInputAllowed && this.inputValue.trim() != ""){
-        let inputItem : SelectItem = new SelectItem({id: this.inputValue.trim(), text: this.inputValue.trim(), children: null});
-        this.itemObjects.push(inputItem);
-        this.active.push(inputItem);
-        e.target.value = "";
-        this.inputValue='';
-        this.data.next(this.active);
-      }
-      e.preventDefault();
-      return;
+        if (this.isInputAllowed && this.inputValue.trim() != "") {
+            var inputItem = new SelectItem({
+                id: this.inputValue.trim(),
+                text: this.inputValue.trim(),
+                children: null
+            });
+            // this.itemObjects.push(inputItem);
+            this.active.push(inputItem);
+            e.target.value = "";
+            this.inputValue = '';
+            this.data.next(this.active);
+            e.preventDefault();
+            return;
+        }
+
+        if (this.active.indexOf(this.activeOption) === -1) {
+            this.selectActiveMatch();
+            this.behavior.next();
+            e.preventDefault();
+            return;
+        }
     }
 
     if (target && target.value) {
@@ -727,8 +737,12 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
       });
     this.actor.options = options;
     if (this.actor.options.length > 0) {
-      this.actor.activeOption = this.actor.options[0];
-      super.ensureHighlightVisible();
+        if(!this.actor.isInputAllowed) {
+            this.actor.activeOption = this.actor.options[0];
+            super.ensureHighlightVisible();
+        }else{
+            this.actor.activeOption = undefined;
+        }
     }
   }
 }
