@@ -452,20 +452,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
     // enter or semicolon or comma
     if (!isUpMode && (e.keyCode === 13 || e.keyCode === 186 || e.keyCode === 188)) {
-        if (this.isInputAllowed && this.inputValue.trim() != "") {
-            var inputItem = new SelectItem({
-                id: this.inputValue.trim(),
-                text: this.inputValue.trim(),
-                children: null
-            });
-            // this.itemObjects.push(inputItem);
-            this.active.push(inputItem);
-            e.target.value = "";
-            this.inputValue = '';
-            this.data.next(this.active);
-            e.preventDefault();
-            return;
-        }
 
         if (this.active.indexOf(this.activeOption) === -1) {
             this.selectActiveMatch();
@@ -473,6 +459,21 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
             e.preventDefault();
             return;
         }
+
+      if (this.isInputAllowed && this.inputValue.trim() != "") {
+        var inputItem = new SelectItem({
+          id: this.inputValue.trim(),
+          text: this.inputValue.trim(),
+          children: null
+        });
+        // this.itemObjects.push(inputItem);
+        this.active.push(inputItem);
+        e.target.value = "";
+        this.inputValue = '';
+        this.data.next(this.active);
+        e.preventDefault();
+        return;
+      }
     }
 
     if (target && target.value) {
@@ -820,8 +821,12 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
     }
     this.actor.options = options;
     if (this.actor.options.length > 0) {
-      this.actor.activeOption = this.actor.options[0].children[0];
-      super.ensureHighlightVisible(optionsMap);
+      if(!this.actor.isInputAllowed) {
+        this.actor.activeOption = this.actor.options[0];
+        super.ensureHighlightVisible(optionsMap);
+      }else{
+        this.actor.activeOption = undefined;
+      }
     }
   }
 }
