@@ -145,7 +145,7 @@ let styles = `
     <input type="text" autocomplete="false" tabindex="-1"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
-           (keyup.enter)="generateBox($event)"
+          
            [disabled]="disabled"
            class="form-control ui-select-search"
            *ngIf="inputMode"
@@ -208,7 +208,6 @@ let styles = `
     <input type="text"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
-           (keyup.enter)="generateBox($event)"
            (click)="matchClick($event)"
            [disabled]="disabled"
            autocomplete="false"
@@ -389,18 +388,18 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       return;
     }
     let target = e.target || e.srcElement;
-      //Arrow keys
-      if (isUpMode && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 ||
-          e.keyCode === 40 )) {
-          e.preventDefault();
-          return;
-      }
+    //Arrow keys
+    if (isUpMode && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 ||
+      e.keyCode === 40)) {
+      e.preventDefault();
+      return;
+    }
+    //Enter, comma, semicolon
+    if(isUpMode && (e.keyCode === 13 || e.keyCode === 186 || e.keyCode === 188)){
+      if(!this.isInputAllowed)
+        return;
 
-      if(isUpMode && e.keyCode === 13 || e.keyCode === 186 || e.keyCode === 188){
-          e.preventDefault();
-          if (!this.isInputAllowed)
-              return;
-      }
+    }
     // backspace
     if (!isUpMode && e.keyCode === 8) {
       let el:any = this.element.nativeElement
@@ -453,27 +452,24 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     // enter or semicolon or comma
     if (!isUpMode && (e.keyCode === 13 || e.keyCode === 186 || e.keyCode === 188)) {
 
-        if (this.active.indexOf(this.activeOption) === -1) {
-            this.selectActiveMatch();
-            this.behavior.next();
-            e.preventDefault();
-            return;
-        }
-
-      if (this.isInputAllowed && this.inputValue.trim() != "") {
-        var inputItem = new SelectItem({
-          id: this.inputValue.trim(),
-          text: this.inputValue.trim(),
-          children: null
-        });
+      if(this.isInputAllowed && this.inputValue.trim() != "" &&  parseInt(this.activeOption.id) == -9999){
+        let inputItem : SelectItem = new SelectItem({id: this.inputValue.trim(), text: this.inputValue.trim(), children: null});
         // this.itemObjects.push(inputItem);
         this.active.push(inputItem);
         e.target.value = "";
-        this.inputValue = '';
+        this.inputValue='';
         this.data.next(this.active);
         e.preventDefault();
         return;
       }
+
+      if (this.active.indexOf(this.activeOption) === -1) {
+        this.selectActiveMatch();
+        this.behavior.next();
+        e.preventDefault();
+        return;
+      }
+
     }
 
     if (target && target.value) {
@@ -736,14 +732,13 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
           (this.actor.multiple === false ||
           (this.actor.multiple === true && this.actor.active.map((item:SelectItem) => item.id).indexOf(option.id) < 0));
       });
+    this.actor.activeOption = new SelectItem({id: '-9999',text: ''});
     this.actor.options = options;
     if (this.actor.options.length > 0) {
-        if(!this.actor.isInputAllowed) {
-            this.actor.activeOption = this.actor.options[0];
-            super.ensureHighlightVisible();
-        }else{
-            this.actor.activeOption = undefined;
-        }
+      if(!this.actor.isInputAllowed) {
+        this.actor.activeOption = this.actor.options[0];
+        super.ensureHighlightVisible();
+      }
     }
   }
 }
@@ -821,12 +816,8 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
     }
     this.actor.options = options;
     if (this.actor.options.length > 0) {
-      if(!this.actor.isInputAllowed) {
-        this.actor.activeOption = this.actor.options[0];
-        super.ensureHighlightVisible(optionsMap);
-      }else{
-        this.actor.activeOption = undefined;
-      }
+      this.actor.activeOption = this.actor.options[0].children[0];
+      super.ensureHighlightVisible(optionsMap);
     }
   }
 }
